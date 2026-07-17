@@ -164,22 +164,36 @@
             card.style.animationDelay = Math.min(i * 60, 480) + 'ms';
           }
 
-          var initial = (p.builder || '?').trim().charAt(0).toUpperCase();
           var src = thumbUrl(p);
+          var hasBuilder = p.builder && String(p.builder).trim();
+          var hasDesc = p.description && String(p.description).trim();
 
-          card.innerHTML =
-            '<div class="card__media">' +
-              '<img class="card__thumb" loading="lazy" src="' + esc(src) + '" alt="Screenshot of ' + esc(p.title) + '">' +
-            '</div>' +
-            '<div class="card__body">' +
+          var headHtml;
+          if (hasBuilder) {
+            var initial = String(p.builder).trim().charAt(0).toUpperCase();
+            headHtml =
               '<div class="card__head">' +
                 '<div class="card__avatar" aria-hidden="true">' + esc(initial) + '</div>' +
                 '<div>' +
                   '<h3 class="card__title">' + esc(p.title) + '</h3>' +
                   '<p class="card__builder">By ' + esc(p.builder) + '</p>' +
                 '</div>' +
-              '</div>' +
-              '<p class="card__desc">' + esc(p.description) + '</p>' +
+              '</div>';
+          } else {
+            headHtml =
+              '<div class="card__head">' +
+                '<h3 class="card__title">' + esc(p.title) + '</h3>' +
+              '</div>';
+          }
+          var descHtml = hasDesc ? '<p class="card__desc">' + esc(p.description) + '</p>' : '';
+
+          card.innerHTML =
+            '<div class="card__media">' +
+              '<img class="card__thumb" loading="lazy" src="' + esc(src) + '" alt="Screenshot of ' + esc(p.title) + '">' +
+            '</div>' +
+            '<div class="card__body">' +
+              headHtml +
+              descHtml +
               '<span class="card__cta" aria-hidden="true">Open prototype \u2192</span>' +
             '</div>' +
             '<a class="card__link" href="' + esc(p.prototypeUrl) + '" target="_blank" rel="noopener noreferrer">' +

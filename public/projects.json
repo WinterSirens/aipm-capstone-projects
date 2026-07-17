@@ -4,31 +4,58 @@
   ],
   "projects": [
     {
-      "id": "crewos",
+      "id": "ai-auto-trading-platform",
       "cohortId": "cohort-1",
-      "title": "CrewOS",
-      "builder": "Unekwu Ojoshaibu",
-      "description": "Genuinely agentic podcast production — a perceive-decide-act-learn pipeline that auto-generates show notes, socials, and newsletters while learning creator preferences.",
-      "prototypeUrl": "https://example.com/crewos",
-      "accent": "magenta"
+      "title": "AI Auto Trading Platform",
+      "prototypeUrl": "https://ai-auto-trading-platform.vercel.app/"
     },
     {
-      "id": "my-kahani",
+      "id": "carecircle",
       "cohortId": "cohort-1",
-      "title": "My Kahani",
-      "builder": "Syed Hadi",
-      "description": "AI interactive storytelling for Muslim children 5–8 — multi-modal personalized adventures with Islamic values woven in, never preachy.",
-      "prototypeUrl": "https://example.com/my-kahani",
-      "accent": "orange"
+      "title": "CareCircle",
+      "prototypeUrl": "https://carecircle-ai.vercel.app/"
     },
     {
-      "id": "tournament-scheduler",
+      "id": "mimette",
       "cohortId": "cohort-1",
-      "title": "AI-assisted Tournament Scheduler",
-      "builder": "Gautam Chowdhury",
-      "description": "Helps youth sports operators create tournament schedules far faster by combining LLM-based natural-language constraint capture with deterministic optimization.",
-      "prototypeUrl": "https://example.com/tournament-scheduler",
-      "accent": "indigo"
+      "title": "Mimette",
+      "prototypeUrl": "https://mimette.lovable.app"
+    },
+    {
+      "id": "eatably",
+      "cohortId": "cohort-1",
+      "title": "Eatably",
+      "prototypeUrl": "https://eatably.vercel.app"
+    },
+    {
+      "id": "rag-assistant",
+      "cohortId": "cohort-1",
+      "title": "RAG Assistant",
+      "prototypeUrl": "https://hr-digital-assistant-1079532965980.us-west1.run.app"
+    },
+    {
+      "id": "worldloom",
+      "cohortId": "cohort-1",
+      "title": "WorldLoom",
+      "prototypeUrl": "https://worldloom-eight.vercel.app"
+    },
+    {
+      "id": "chatty-fox",
+      "cohortId": "cohort-1",
+      "title": "Chatty Fox",
+      "prototypeUrl": "https://chattyfox.app/"
+    },
+    {
+      "id": "mortgagedocs-ai",
+      "cohortId": "cohort-1",
+      "title": "MortgageDocs AI",
+      "prototypeUrl": "https://docs-import.vercel.app/"
+    },
+    {
+      "id": "run-sid",
+      "cohortId": "cohort-1",
+      "title": "RUN SID",
+      "prototypeUrl": "https://www.runsid.com"
     }
   ]
 }
