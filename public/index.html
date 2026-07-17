@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Capstone projects built by students of the AI PM Bootcamp — AI Product Academy.">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Capstone Projects — AI Product Academy</title>
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <img class="topbar__logo" src="assets/logo.png" alt="AI Product Academy">
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero__glow hero__glow--magenta" aria-hidden="true"></div>
+      <div class="hero__glow hero__glow--warm" aria-hidden="true"></div>
+      <p class="hero__eyebrow">AI PM Bootcamp · Capstone Projects</p>
+      <h1 class="hero__title">See what our students <em>built</em>.</h1>
+      <p class="hero__sub">Click through to play with the prototypes built by students of past cohorts.</p>
+      <img class="hero__logo" src="assets/logo.png" alt="" aria-hidden="true">
+    </section>
+
+    <div class="tabs" id="tabs" role="tablist" aria-label="Cohorts"></div>
+
+    <section class="gallery">
+      <div class="gallery__head">
+        <p class="eyebrow">The Gallery</p>
+        <h2 class="gallery__title" id="gallery-title">Past Cohort Capstones</h2>
+      </div>
+      <div class="grid" id="grid" role="tabpanel" aria-live="polite"></div>
+      <nav class="pagination" id="pagination" aria-label="Project pages"></nav>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <img class="footer__logo" src="assets/logo.png" alt="AI Product Academy">
+    <p class="footer__line">Built in the AI PM Bootcamp.</p>
+    <p class="footer__sub">Dr. Marily Nika · marily.substack.com</p>
+    <a class="footer__link" href="https://marily.substack.com" target="_blank" rel="noopener noreferrer">AI Product Academy →</a>
+  </footer>
+
+  <script>
+    (function () {
+      'use strict';
+
+      var ACCENTS = {
+        red: 'var(--apa-red)',
+        orange: 'var(--apa-orange)',
+        magenta: 'var(--apa-magenta)',
+        indigo: 'var(--apa-indigo-800)'
+      };
+      var ACCENT_ORDER = ['red', 'orange', 'magenta', 'indigo'];
+      var PAGE_SIZE = 18;
+
+      var state = { cohorts: [], projects: [], activeCohortId: null, page: 1 };
+
+      var tabsEl = document.getElementById('tabs');
+      var gridEl = document.getElementById('grid');
+      var paginationEl = document.getElementById('pagination');
+
+      function esc(s) {
+        return String(s == null ? '' : s)
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+      }
+
+      function thumbUrl(p) {
+        if (p.thumbnailUrl) return p.thumbnailUrl;
+        return 'https://s.wordpress.com/mshots/v1/' + encodeURIComponent(p.prototypeUrl) + '?w=640&h=360';
+      }
+
+      /* ---------- Tabs ---------- */
+      function renderTabs() {
+        tabsEl.innerHTML = '';
+
+        /* A single cohort has nothing to switch between — hide the tab bar
+           entirely. It reappears automatically once a 2nd cohort is added. */
+        if (state.cohorts.length <= 1) {
+          tabsEl.style.display = 'none';
+          return;
+        }
+        tabsEl.style.display = '';
+
+        state.cohorts.forEach(function (c) {
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'tab';
+          btn.setAttribute('role', 'tab');
+          btn.setAttribute('aria-selected', String(c.id === state.activeCohortId));
+          btn.setAttribute('aria-controls', 'grid');
+          btn.tabIndex = c.id === state.activeCohortId ? 0 : -1;
+          btn.dataset.cohortId = c.id;
+          btn.textContent = c.name;
+          btn.addEventListener('click', function () { activate(c.id); });
+          tabsEl.appendChild(btn);
+        });
+      }
+
+      tabsEl.addEventListener('keydown', function (e) {
+        if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+        var tabs = Array.prototype.slice.call(tabsEl.querySelectorAll('.tab'));
+        var idx = tabs.indexOf(document.activeElement);
+        if (idx === -1) return;
+        e.preventDefault();
+        var next = e.key === 'ArrowRight' ? (idx + 1) % tabs.length : (idx - 1 + tabs.length) % tabs.length;
+        tabs[next].focus();
+        activate(tabs[next].dataset.cohortId);
+      });
+
+      function activate(cohortId) {
+        if (state.activeCohortId === cohortId) return;
+        state.activeCohortId = cohortId;
+        state.page = 1;
+        tabsEl.querySelectorAll('.tab').forEach(function (t) {
+          var selected = t.dataset.cohortId === cohortId;
+          t.setAttribute('aria-selected', String(selected));
+          t.tabIndex = selected ? 0 : -1;
+        });
+        renderGrid();
+      }
+
+      /* ---------- Grid ---------- */
+      function renderGrid() {
+        var allProjects = state.projects.filter(function (p) { return p.cohortId === state.activeCohortId; });
+        var totalPages = Math.max(1, Math.ceil(allProjects.length / PAGE_SIZE));
+        if (state.page > totalPages) state.page = totalPages;
+        if (state.page < 1) state.page = 1;
+
+        var start = (state.page - 1) * PAGE_SIZE;
+        var pageProjects = allProjects.slice(start, start + PAGE_SIZE);
+
+        gridEl.innerHTML = '';
+
+        if (!allProjects.length) {
+          var empty = document.createElement('div');
+          empty.className = 'empty';
+          empty.innerHTML =
+            '<p class="eyebrow">Coming Soon</p>' +
+            '<h3 class="empty__title">This cohort\u2019s projects haven\u2019t been added yet.</h3>' +
+            '<p class="empty__body">Check back after the final presentations.</p>';
+          gridEl.appendChild(empty);
+          renderPagination(0);
+          return;
+        }
+
+        var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        pageProjects.forEach(function (p, i) {
+          var globalIndex = start + i;
+          var accentKey = ACCENTS[p.accent] ? p.accent : ACCENT_ORDER[globalIndex % ACCENT_ORDER.length];
+          var card = document.createElement('article');
+          card.className = 'card';
+          card.style.setProperty('--accent', ACCENTS[accentKey]);
+
+          if (!reduceMotion) {
+            card.classList.add('reveal');
+            card.style.animationDelay = Math.min(i * 60, 480) + 'ms';
+          }
+
+          var initial = (p.builder || '?').trim().charAt(0).toUpperCase();
+          var src = thumbUrl(p);
+
+          card.innerHTML =
+            '<div class="card__media">' +
+              '<img class="card__thumb" loading="lazy" src="' + esc(src) + '" alt="Screenshot of ' + esc(p.title) + '">' +
+            '</div>' +
+            '<div class="card__body">' +
+              '<div class="card__head">' +
+                '<div class="card__avatar" aria-hidden="true">' + esc(initial) + '</div>' +
+                '<div>' +
+                  '<h3 class="card__title">' + esc(p.title) + '</h3>' +
+                  '<p class="card__builder">By ' + esc(p.builder) + '</p>' +
+                '</div>' +
+              '</div>' +
+              '<p class="card__desc">' + esc(p.description) + '</p>' +
+              '<span class="card__cta" aria-hidden="true">Open prototype \u2192</span>' +
+            '</div>' +
+            '<a class="card__link" href="' + esc(p.prototypeUrl) + '" target="_blank" rel="noopener noreferrer">' +
+              '<span class="sr-only">Open ' + esc(p.title) + ' prototype</span>' +
+            '</a>';
+
+          wireThumb(card.querySelector('.card__thumb'), src);
+          gridEl.appendChild(card);
+        });
+
+        renderPagination(totalPages);
+      }
+
+      /* ---------- Pagination ---------- */
+      function renderPagination(totalPages) {
+        paginationEl.innerHTML = '';
+        if (totalPages <= 1) return;
+
+        var prev = document.createElement('button');
+        prev.type = 'button';
+        prev.className = 'page-btn page-btn--nav';
+        prev.setAttribute('aria-label', 'Previous page');
+        prev.innerHTML = '&#8249;';
+        prev.disabled = state.page <= 1;
+        prev.addEventListener('click', function () { goToPage(state.page - 1); });
+        paginationEl.appendChild(prev);
+
+        for (var n = 1; n <= totalPages; n++) {
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'page-btn';
+          btn.textContent = String(n);
+          btn.setAttribute('aria-label', 'Page ' + n);
+          if (n === state.page) {
+            btn.classList.add('page-btn--active');
+            btn.setAttribute('aria-current', 'page');
+          }
+          btn.dataset.page = String(n);
+          btn.addEventListener('click', function () { goToPage(Number(this.dataset.page)); });
+          paginationEl.appendChild(btn);
+        }
+
+        var next = document.createElement('button');
+        next.type = 'button';
+        next.className = 'page-btn page-btn--nav';
+        next.setAttribute('aria-label', 'Next page');
+        next.innerHTML = '&#8250;';
+        next.disabled = state.page >= totalPages;
+        next.addEventListener('click', function () { goToPage(state.page + 1); });
+        paginationEl.appendChild(next);
+      }
+
+      function goToPage(n) {
+        if (n === state.page) return;
+        state.page = n;
+        renderGrid();
+        var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var target = document.querySelector('.gallery');
+        if (target) target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+      }
+
+      /* mShots returns a small placeholder while it captures the shot;
+         retry once after 3s if the image looks like the placeholder. */
+      function wireThumb(img, src) {
+        img.addEventListener('load', function () {
+          if (img.naturalWidth < 200 && !img.dataset.retried) {
+            img.dataset.retried = '1';
+            setTimeout(function () {
+              img.src = src + (src.indexOf('?') > -1 ? '&' : '?') + 'r=1';
+            }, 3000);
+          } else if (img.naturalWidth >= 200) {
+            img.classList.add('is-loaded');
+          }
+        });
+        img.addEventListener('error', function () {
+          img.remove(); /* fall back to the placeholder glyph */
+        });
+      }
+
+      /* ---------- Boot ---------- */
+      fetch('projects.json')
+        .then(function (r) {
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          return r.json();
+        })
+        .then(function (data) {
+          state.cohorts = (data.cohorts || []).slice().sort(function (a, b) { return (b.order || 0) - (a.order || 0); });
+          state.projects = data.projects || [];
+          state.activeCohortId = state.cohorts.length ? state.cohorts[0].id : null;
+          renderTabs();
+          renderGrid();
+        })
+        .catch(function (err) {
+          gridEl.innerHTML =
+            '<div class="empty">' +
+              '<p class="eyebrow">Something went wrong</p>' +
+              '<h3 class="empty__title">Couldn\u2019t load the projects.</h3>' +
+              '<p class="empty__body">Check that projects.json is valid JSON (' + esc(err.message) + ').</p>' +
+            '</div>';
+        });
+    })();
+  </script>
+
+</body>
+</html>

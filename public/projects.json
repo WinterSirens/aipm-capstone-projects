@@ -1,0 +1,34 @@
+{
+  "cohorts": [
+    { "id": "cohort-1", "name": "Cohort 1", "order": 1 }
+  ],
+  "projects": [
+    {
+      "id": "crewos",
+      "cohortId": "cohort-1",
+      "title": "CrewOS",
+      "builder": "Unekwu Ojoshaibu",
+      "description": "Genuinely agentic podcast production — a perceive-decide-act-learn pipeline that auto-generates show notes, socials, and newsletters while learning creator preferences.",
+      "prototypeUrl": "https://example.com/crewos",
+      "accent": "magenta"
+    },
+    {
+      "id": "my-kahani",
+      "cohortId": "cohort-1",
+      "title": "My Kahani",
+      "builder": "Syed Hadi",
+      "description": "AI interactive storytelling for Muslim children 5–8 — multi-modal personalized adventures with Islamic values woven in, never preachy.",
+      "prototypeUrl": "https://example.com/my-kahani",
+      "accent": "orange"
+    },
+    {
+      "id": "tournament-scheduler",
+      "cohortId": "cohort-1",
+      "title": "AI-assisted Tournament Scheduler",
+      "builder": "Gautam Chowdhury",
+      "description": "Helps youth sports operators create tournament schedules far faster by combining LLM-based natural-language constraint capture with deterministic optimization.",
+      "prototypeUrl": "https://example.com/tournament-scheduler",
+      "accent": "indigo"
+    }
+  ]
+}
