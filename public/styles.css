@@ -226,50 +226,10 @@ a { color: inherit; }
   pointer-events: none;
 }
 
-/* ---------------- Cohort tabs ---------------- */
-.tabs {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  max-width: var(--container-lg);
-  margin: var(--space-7) auto var(--space-5);
-  padding: 0 var(--space-5);
-}
-
-.tab {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 9px 20px;
-  border: none;
-  border-radius: var(--radius-pill);
-  background: transparent;
-  color: var(--apa-ink-faint);
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: 14px;
-  letter-spacing: 0.04em;
-  line-height: 1;
-  cursor: pointer;
-  transition: background var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out), transform var(--dur-fast) var(--ease-out);
-}
-
-.tab:hover { background: var(--apa-cloud); color: var(--apa-indigo-800); }
-
-.tab:active { transform: scale(0.97); }
-
-.tab[aria-selected="true"] {
-  background: var(--apa-indigo-800);
-  color: #fff;
-  box-shadow: var(--shadow-sm);
-}
-
 /* ---------------- Gallery ---------------- */
 .gallery {
   max-width: var(--container-lg);
-  margin: 0 auto;
+  margin: var(--space-7) auto 0;
   padding: 0 var(--space-5) var(--space-8);
 }
 
@@ -626,6 +586,6 @@ a { color: inherit; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .reveal { animation: none; opacity: 1; }
-  .card, .card__thumb, .tab, .card__cta, .footer__link, .page-btn { transition: none; }
+  .card, .card__thumb, .card__cta, .footer__link, .page-btn { transition: none; }
   .card:hover { transform: none; }
 }

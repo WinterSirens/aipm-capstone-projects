@@ -1,61 +1,91 @@
 {
-  "cohorts": [
-    { "id": "cohort-1", "name": "Cohort 1", "order": 1 }
-  ],
   "projects": [
     {
       "id": "ai-auto-trading-platform",
-      "cohortId": "cohort-1",
       "title": "AI Auto Trading Platform",
       "prototypeUrl": "https://ai-auto-trading-platform.vercel.app/"
     },
     {
       "id": "carecircle",
-      "cohortId": "cohort-1",
       "title": "CareCircle",
       "prototypeUrl": "https://carecircle-ai.vercel.app/"
     },
     {
       "id": "mimette",
-      "cohortId": "cohort-1",
       "title": "Mimette",
       "prototypeUrl": "https://mimette.lovable.app"
     },
     {
       "id": "eatably",
-      "cohortId": "cohort-1",
       "title": "Eatably",
       "prototypeUrl": "https://eatably.vercel.app"
     },
     {
       "id": "rag-assistant",
-      "cohortId": "cohort-1",
       "title": "RAG Assistant",
       "prototypeUrl": "https://hr-digital-assistant-1079532965980.us-west1.run.app"
     },
     {
       "id": "worldloom",
-      "cohortId": "cohort-1",
       "title": "WorldLoom",
       "prototypeUrl": "https://worldloom-eight.vercel.app"
     },
     {
       "id": "chatty-fox",
-      "cohortId": "cohort-1",
       "title": "Chatty Fox",
       "prototypeUrl": "https://chattyfox.app/"
     },
     {
       "id": "mortgagedocs-ai",
-      "cohortId": "cohort-1",
       "title": "MortgageDocs AI",
       "prototypeUrl": "https://docs-import.vercel.app/"
     },
     {
       "id": "run-sid",
-      "cohortId": "cohort-1",
       "title": "RUN SID",
       "prototypeUrl": "https://www.runsid.com"
+    },
+    {
+      "id": "vibe-check",
+      "title": "Vibe Check",
+      "prototypeUrl": "https://vibecheck-78py.onrender.com/"
+    },
+    {
+      "id": "beacon",
+      "title": "Beacon",
+      "prototypeUrl": "https://beacon.ryansimpson.work/"
+    },
+    {
+      "id": "quiet-guardian",
+      "title": "Quiet Guardian",
+      "prototypeUrl": "https://quietguardianprototype.vercel.app/"
+    },
+    {
+      "id": "homeledger",
+      "title": "HomeLedger",
+      "prototypeUrl": "https://homeledger-demo.onrender.com/onboarding"
+    },
+    {
+      "id": "agent-edge",
+      "title": "Agent Edge",
+      "prototypeUrl": "https://monicadedhia-sketch.github.io/AgentEdge/"
+    },
+    {
+      "id": "maeve",
+      "title": "Maeve",
+      "description": "The care layer for your family.",
+      "prototypeUrl": "https://maeveapp.netlify.app"
+    },
+    {
+      "id": "avatars",
+      "title": "Avatars",
+      "description": "AI language coach.",
+      "prototypeUrl": "https://avatars-42ie.vercel.app/"
+    },
+    {
+      "id": "mirrorme",
+      "title": "MirrorMe",
+      "prototypeUrl": "https://mirror-me-sync.base44.app"
     }
   ]
 }

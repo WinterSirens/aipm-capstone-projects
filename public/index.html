@@ -27,14 +27,12 @@
       <img class="hero__logo" src="assets/logo.png" alt="" aria-hidden="true">
     </section>
 
-    <div class="tabs" id="tabs" role="tablist" aria-label="Cohorts"></div>
-
     <section class="gallery">
       <div class="gallery__head">
         <p class="eyebrow">The Gallery</p>
         <h2 class="gallery__title" id="gallery-title">Past Cohort Capstones</h2>
       </div>
-      <div class="grid" id="grid" role="tabpanel" aria-live="polite"></div>
+      <div class="grid" id="grid" aria-live="polite"></div>
       <nav class="pagination" id="pagination" aria-label="Project pages"></nav>
     </section>
   </main>
@@ -59,9 +57,8 @@
       var ACCENT_ORDER = ['red', 'orange', 'magenta', 'indigo'];
       var PAGE_SIZE = 18;
 
-      var state = { cohorts: [], projects: [], activeCohortId: null, page: 1 };
+      var state = { projects: [], page: 1 };
 
-      var tabsEl = document.getElementById('tabs');
       var gridEl = document.getElementById('grid');
       var paginationEl = document.getElementById('pagination');
 
@@ -76,59 +73,9 @@
         return 'https://s.wordpress.com/mshots/v1/' + encodeURIComponent(p.prototypeUrl) + '?w=640&h=360';
       }
 
-      /* ---------- Tabs ---------- */
-      function renderTabs() {
-        tabsEl.innerHTML = '';
-
-        /* A single cohort has nothing to switch between — hide the tab bar
-           entirely. It reappears automatically once a 2nd cohort is added. */
-        if (state.cohorts.length <= 1) {
-          tabsEl.style.display = 'none';
-          return;
-        }
-        tabsEl.style.display = '';
-
-        state.cohorts.forEach(function (c) {
-          var btn = document.createElement('button');
-          btn.type = 'button';
-          btn.className = 'tab';
-          btn.setAttribute('role', 'tab');
-          btn.setAttribute('aria-selected', String(c.id === state.activeCohortId));
-          btn.setAttribute('aria-controls', 'grid');
-          btn.tabIndex = c.id === state.activeCohortId ? 0 : -1;
-          btn.dataset.cohortId = c.id;
-          btn.textContent = c.name;
-          btn.addEventListener('click', function () { activate(c.id); });
-          tabsEl.appendChild(btn);
-        });
-      }
-
-      tabsEl.addEventListener('keydown', function (e) {
-        if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
-        var tabs = Array.prototype.slice.call(tabsEl.querySelectorAll('.tab'));
-        var idx = tabs.indexOf(document.activeElement);
-        if (idx === -1) return;
-        e.preventDefault();
-        var next = e.key === 'ArrowRight' ? (idx + 1) % tabs.length : (idx - 1 + tabs.length) % tabs.length;
-        tabs[next].focus();
-        activate(tabs[next].dataset.cohortId);
-      });
-
-      function activate(cohortId) {
-        if (state.activeCohortId === cohortId) return;
-        state.activeCohortId = cohortId;
-        state.page = 1;
-        tabsEl.querySelectorAll('.tab').forEach(function (t) {
-          var selected = t.dataset.cohortId === cohortId;
-          t.setAttribute('aria-selected', String(selected));
-          t.tabIndex = selected ? 0 : -1;
-        });
-        renderGrid();
-      }
-
       /* ---------- Grid ---------- */
       function renderGrid() {
-        var allProjects = state.projects.filter(function (p) { return p.cohortId === state.activeCohortId; });
+        var allProjects = state.projects;
         var totalPages = Math.max(1, Math.ceil(allProjects.length / PAGE_SIZE));
         if (state.page > totalPages) state.page = totalPages;
         if (state.page < 1) state.page = 1;
@@ -143,7 +90,7 @@
           empty.className = 'empty';
           empty.innerHTML =
             '<p class="eyebrow">Coming Soon</p>' +
-            '<h3 class="empty__title">This cohort\u2019s projects haven\u2019t been added yet.</h3>' +
+            '<h3 class="empty__title">No projects have been added yet.</h3>' +
             '<p class="empty__body">Check back after the final presentations.</p>';
           gridEl.appendChild(empty);
           renderPagination(0);
@@ -280,10 +227,7 @@
           return r.json();
         })
         .then(function (data) {
-          state.cohorts = (data.cohorts || []).slice().sort(function (a, b) { return (b.order || 0) - (a.order || 0); });
           state.projects = data.projects || [];
-          state.activeCohortId = state.cohorts.length ? state.cohorts[0].id : null;
-          renderTabs();
           renderGrid();
         })
         .catch(function (err) {
