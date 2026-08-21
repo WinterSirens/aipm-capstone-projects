@@ -3,3 +3,4 @@ node_modules/
 .wrangler/
 preview-desktop.png
 preview-mobile.png
+FABLE5_SPEC.md

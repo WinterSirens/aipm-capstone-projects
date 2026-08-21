@@ -13,6 +13,37 @@
 </head>
 <body>
 
+  <!-- Access gate (shown until a valid code is entered) -->
+  <div class="gate" id="gate" hidden>
+    <div class="gate__glow gate__glow--magenta" aria-hidden="true"></div>
+    <div class="gate__glow gate__glow--warm" aria-hidden="true"></div>
+    <form class="gate__card" id="gate-form" autocomplete="off">
+      <img class="gate__logo" src="assets/logo.png" alt="AI Product Academy">
+      <p class="gate__eyebrow">AI PM Bootcamp · Capstone Projects</p>
+      <h1 class="gate__title">Enter your access code</h1>
+      <p class="gate__sub">This showcase is shared by link. Enter the code you were given to view the gallery.</p>
+      <div class="gate__field">
+        <label class="sr-only" for="gate-input">Access code</label>
+        <input
+          id="gate-input"
+          class="gate__input"
+          type="text"
+          inputmode="text"
+          autocomplete="off"
+          autocapitalize="characters"
+          spellcheck="false"
+          placeholder="Access code"
+          aria-describedby="gate-error"
+          required>
+      </div>
+      <p class="gate__error" id="gate-error" role="alert" hidden></p>
+      <button type="submit" class="gate__submit" id="gate-submit">Unlock gallery</button>
+    </form>
+  </div>
+
+  <!-- Gallery app (revealed after unlock) -->
+  <div class="app" id="app" hidden>
+
   <header class="topbar">
     <img class="topbar__logo" src="assets/logo.png" alt="AI Product Academy">
   </header>
@@ -43,6 +74,8 @@
     <p class="footer__sub">Dr. Marily Nika · marily.substack.com</p>
     <a class="footer__link" href="https://marily.substack.com" target="_blank" rel="noopener noreferrer">AI Product Academy →</a>
   </footer>
+
+  </div><!-- /.app -->
 
   <script>
     (function () {
@@ -220,7 +253,102 @@
         });
       }
 
+      /* ---------- Access gate ---------- */
+      var STORAGE_KEY = 'apa_access_code';
+      var gateEl = document.getElementById('gate');
+      var appEl = document.getElementById('app');
+      var gateForm = document.getElementById('gate-form');
+      var gateInput = document.getElementById('gate-input');
+      var gateError = document.getElementById('gate-error');
+      var gateSubmit = document.getElementById('gate-submit');
+
+      function showGallery() {
+        gateEl.hidden = true;
+        appEl.hidden = false;
+      }
+
+      function showGate() {
+        appEl.hidden = true;
+        gateEl.hidden = false;
+        gateInput.value = '';
+        gateInput.focus();
+      }
+
+      function setGateError(msg) {
+        if (msg) {
+          gateError.textContent = msg;
+          gateError.hidden = false;
+        } else {
+          gateError.hidden = true;
+          gateError.textContent = '';
+        }
+      }
+
+      /* Case-insensitive, whitespace-trimmed compare so "apa-buildfuture " works. */
+      function codesMatch(a, b) {
+        return String(a).trim().toLowerCase() === String(b).trim().toLowerCase();
+      }
+
+      function tryUnlock(submittedCode) {
+        return fetch('access.json', { cache: 'no-store' })
+          .then(function (r) {
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            return r.json();
+          })
+          .then(function (data) {
+            var valid = data && data.code && codesMatch(submittedCode, data.code);
+            if (valid) {
+              try { localStorage.setItem(STORAGE_KEY, String(submittedCode).trim()); } catch (e) {}
+              showGallery();
+              return true;
+            }
+            return false;
+          });
+      }
+
+      /* On load: if we have a cached code, re-validate against the current
+         access.json (so rotating the code revokes stale sessions). */
+      function bootGate() {
+        var cached = null;
+        try { cached = localStorage.getItem(STORAGE_KEY); } catch (e) {}
+        if (cached) {
+          tryUnlock(cached)
+            .then(function (ok) { if (!ok) showGate(); })
+            .catch(function () { showGate(); });
+        } else {
+          showGate();
+        }
+      }
+
+      gateForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var value = gateInput.value;
+        if (!value || !value.trim()) {
+          setGateError('Please enter an access code.');
+          return;
+        }
+        setGateError('');
+        gateSubmit.disabled = true;
+        gateSubmit.textContent = 'Checking…';
+        tryUnlock(value)
+          .then(function (ok) {
+            gateSubmit.disabled = false;
+            gateSubmit.textContent = 'Unlock gallery';
+            if (!ok) {
+              setGateError('That code isn\u2019t valid. Please check it and try again.');
+              gateInput.focus();
+              gateInput.select();
+            }
+          })
+          .catch(function (err) {
+            gateSubmit.disabled = false;
+            gateSubmit.textContent = 'Unlock gallery';
+            setGateError('Couldn\u2019t verify the code right now. Please try again.');
+          });
+      });
+
       /* ---------- Boot ---------- */
+      bootGate();
       fetch('projects.json')
         .then(function (r) {
           if (!r.ok) throw new Error('HTTP ' + r.status);
