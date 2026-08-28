@@ -86,6 +86,31 @@
       "id": "mirrorme",
       "title": "MirrorMe",
       "prototypeUrl": "https://mirror-me-sync.base44.app"
+    },
+    {
+      "id": "replenishu",
+      "title": "ReplenishU",
+      "prototypeUrl": "https://replenishu.lovable.app/"
+    },
+    {
+      "id": "agoria",
+      "title": "Agoria",
+      "prototypeUrl": "https://agoria-eta.vercel.app"
+    },
+    {
+      "id": "go-write",
+      "title": "Go Write",
+      "prototypeUrl": "https://go-write-five.vercel.app"
+    },
+    {
+      "id": "pointsherpa",
+      "title": "PointSherpa",
+      "prototypeUrl": "https://pointsherpa.vercel.app"
+    },
+    {
+      "id": "family-bridge",
+      "title": "Family Bridge",
+      "prototypeUrl": "https://family-bridge-ten.vercel.app/"
     }
   ]
 }
